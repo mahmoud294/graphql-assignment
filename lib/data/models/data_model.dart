@@ -38,6 +38,52 @@ class RepoModel {
       };
 }
 
+PageModel pageModelFromJson(String str) => PageModel.fromJson(json.decode(str));
+
+String pageModelToJson(PageModel data) => json.encode(data.toJson());
+
+class PageModel {
+  final PageInfo pageInfo;
+
+  PageModel({
+    required this.pageInfo,
+  });
+
+  factory PageModel.fromJson(Map<String, dynamic> json) => PageModel(
+        pageInfo: PageInfo.fromJson(json["pageInfo"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "pageInfo": pageInfo.toJson(),
+      };
+}
+
+class PageInfo extends PageInfoEntity {
+  PageInfo({
+    required super.endCursor,
+    required super.hasNextPage,
+    required super.hasPreviousPage,
+  });
+PageInfoEntity toEntity() {
+    return PageInfoEntity(
+      endCursor: endCursor,
+      hasNextPage: hasNextPage,
+      hasPreviousPage: hasPreviousPage,
+    );
+  }
+  factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(
+        endCursor: json["endCursor"],
+        hasNextPage: json["hasNextPage"],
+        hasPreviousPage: json["hasPreviousPage"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "endCursor": endCursor,
+        "hasNextPage": hasNextPage,
+        "hasPreviousPage": hasPreviousPage,
+      };
+}
+
 class User {
   final RepositoriesModel repositories;
 
@@ -56,15 +102,19 @@ class User {
 
 class RepositoriesModel {
   final List<RepositoryData> nodes;
+  final PageInfo pageInfo;
 
   RepositoriesModel({
     required this.nodes,
+    required this.pageInfo,
   });
 
   factory RepositoriesModel.fromJson(Map<String, dynamic> json) =>
       RepositoriesModel(
         nodes: List<RepositoryData>.from(
-            json["nodes"].map((x) => RepositoryData.fromJson(x))),
+          json["nodes"].map((x) => RepositoryData.fromJson(x)),
+        ),
+        pageInfo: PageInfo.fromJson(json["pageInfo"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -89,7 +139,8 @@ class RepositoryData extends RepositoriesEntity {
 
   factory RepositoryData.fromJson(Map<String, dynamic> json) => RepositoryData(
         name: json["name"],
-        languages: Language.fromJson(json["primaryLanguage"]??{"name":"UnKnown"}),
+        languages:
+            Language.fromJson(json["primaryLanguage"] ?? {"name": "UnKnown"}),
         description: json["description"] ?? "",
       );
 

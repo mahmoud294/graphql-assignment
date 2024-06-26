@@ -10,6 +10,8 @@ final injector = GetIt.instance;
 void setupInjector() {
   injector.registerFactory(() => RepoBloc(injector()));
   injector.registerLazySingleton(() => ReposUseCase(injector()));
-  injector.registerLazySingleton<ReposRepository>(() => ReposRepositoryImpl(injector()));
+  injector.registerLazySingleton<ReposRepository>(
+    () => ReposRepositoryImpl(injector()),
+  );
   injector.registerLazySingleton<ReposDataSource>(() => ReposDataSourceImpl());
 }

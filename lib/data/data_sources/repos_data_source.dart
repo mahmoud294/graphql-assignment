@@ -7,7 +7,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 /// This abstract class outlines the methods that concrete data source
 /// implementations should implement, such as fetching data from a remote API, local database, or any other data source.
 abstract class ReposDataSource {
-  Future<RepositoriesModel> getRepositories();
+  Future<RepositoriesModel> getRepositories(String? after);
 }
 
 /// ReposDataSourceImpl is the concrete implementation of the ReposDataSource
@@ -26,22 +26,51 @@ class ReposDataSourceImpl implements ReposDataSource {
   );
 
   @override
-  Future<RepositoriesModel> getRepositories() async {
-    const query = r'''
-query{user(login: "mahmoud294") {
-    repositories(first: 40,) {
+  Future<RepositoriesModel> getRepositories(String? after) async {
+    String query = after != null
+        ? '''
+query{
+user(login: "torvalds") {
+    repositories(first: 10 after: "$after") {
       nodes {
         name
         primaryLanguage {name}
         description
         
       }
-      
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+    }
+  }}
+   '''
+        : '''
+query{
+user(login: "torvalds") {
+    repositories(first: 10 after: null) {
+      nodes {
+        name
+        primaryLanguage {name}
+        description
+        
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
     }
   }}
    ''';
 
-    final data = await client.query(QueryOptions(document: gql(query)));
+    final data = await client.query(
+      QueryOptions(
+        document: gql(query),
+        //  variables: {'nAfter':after},
+      ),
+    );
     if (data.hasException) {
       throw ServerFailure(data.exception!.graphqlErrors[0].message);
     } else {

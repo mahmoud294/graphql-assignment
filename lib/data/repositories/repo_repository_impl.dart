@@ -17,16 +17,20 @@ class ReposRepositoryImpl implements ReposRepository {
   ReposRepositoryImpl(this.reposDataSource);
 
   @override
-  Future<Either<Failure, List<RepositoriesEntity>>> getRepos() async {
+  Future<Either<Failure, RepositoriesPageEntity>> getRepos(
+    String? after,
+  ) async {
     try {
-      final data = await reposDataSource.getRepositories();
-      return Right(
-        data.nodes
+      final data = await reposDataSource.getRepositories(after);
+      RepositoriesPageEntity repositoriesPageEntity = RepositoriesPageEntity(
+        repositories: data.nodes
             .map(
               (e) => e.toEntity(),
             )
             .toList(),
+        pageInfo: data.pageInfo.toEntity(),
       );
+      return Right(repositoriesPageEntity);
     } on ServerException {
       return const Left(ServerFailure("Server Error"));
     } on SocketException {

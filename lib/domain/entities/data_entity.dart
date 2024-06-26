@@ -9,6 +9,26 @@ class RepositoriesEntity {
     required this.description,
   });
 }
+class RepositoriesPageEntity {
+  final List<RepositoriesEntity> repositories;
+  final PageInfoEntity pageInfo;
+
+  RepositoriesPageEntity({
+    required this.repositories,
+    required this.pageInfo,
+  });
+}
+
+class PageInfoEntity {
+  final String endCursor;
+  final bool hasNextPage;
+  final bool hasPreviousPage;
+  PageInfoEntity({
+    required this.hasNextPage,
+    required this.endCursor,
+    required this.hasPreviousPage,
+  });
+}
 
 class LanguagesEntity {
   final String name;

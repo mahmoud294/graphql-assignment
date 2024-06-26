@@ -13,9 +13,9 @@ import 'package:github_graphql/domain/repositories/repos_repository.dart';
 class ReposUseCase {
   final ReposRepository reposRepository;
   ReposUseCase(this.reposRepository);
-  Future<Either<Failure, List<RepositoriesEntity>>> getRepos() async {
+  Future<Either<Failure, RepositoriesPageEntity>> getRepos(String? after) async {
     try {
-      return await reposRepository.getRepos();
+      return await reposRepository.getRepos( after);
     } on ServerException {
       return const Left(ServerFailure("Server Error"));
     } on SocketException {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:github_graphql/presentation/blocs/repo/repo_bloc.dart';
+import 'package:github_graphql/presentation/screens/components/lang_filter.dart';
+import 'package:github_graphql/presentation/screens/components/repo_list_view.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,6 +12,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Screen'),
+        actions: const [
+          DropDownFilterWidget(),
+        ],
       ),
       body: BlocBuilder<RepoBloc, RepoState>(
         builder: (context, state) {
@@ -19,18 +24,17 @@ class HomeScreen extends StatelessWidget {
             return Center(child: Text(state.error));
           } else if (state is RepoLoaded) {
             final data = state.repos;
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) => ListTile(
-                title: Text(data[index].name),
-                subtitle: Text(data[index].description),
-              ),
-            );
+            if (data.isEmpty) {
+              return const Center(child: Text('No data found'));
+            }
+            return ReposListView(data: data);
           } else {
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }
         },
       ),
     );
   }
 }
+
+

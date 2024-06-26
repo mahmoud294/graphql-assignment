@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:github_graphql/presentation/blocs/repo/repo_bloc.dart';
 
 class DropDownFilterWidget extends StatefulWidget {
   const DropDownFilterWidget({super.key});
@@ -32,6 +34,7 @@ class _DropDownFilterWidgetState extends State<DropDownFilterWidget> {
         setState(() {
           language = value;
         });
+        context.read<RepoBloc>().add(GetRepoFilteregEvent(lang: language));
       },
       dropdownMenuEntries: [
         const DropdownMenuEntry(
