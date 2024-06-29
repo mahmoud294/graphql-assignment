@@ -31,7 +31,7 @@ The project is structured as follows:
 ## Dependencies
 
 -   [flutter](https://pub.dev/packages/flutter)
--   [http](https://pub.dev/packages/http)
+-   [graphql_flutter](https://pub.dev/packages/graphql_flutter)
 -   [get_it](https://pub.dev/packages/get_it)
 -   [bloc](https://pub.dev/packages/flutter_bloc)
 -   [go_router](https://pub.dev/packages/go_router)
